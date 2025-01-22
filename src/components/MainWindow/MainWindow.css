@@ -1,0 +1,55 @@
+section.mainWindow {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 100vh;
+}
+
+section.mainWindow .graph{
+
+    /* background-color: rgb(216, 73, 255); */
+    width: 95%;
+    height: 100%;
+    position: relative;
+    
+}
+
+section.mainWindow .tables{
+
+    /* background-color: blue; */
+    width: 50%;
+    height: 100%;
+   
+    
+}
+section.mainWindow .tables .container> div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+section.mainWindow .tables table{
+    border: 1px solid black;
+}
+
+/* границы ячеек первого ряда таблицы */
+section.mainWindow .tables th {
+    border: 1px solid grey;
+ }
+ /* границы ячеек тела таблицы */
+ section.mainWindow .tables  td {
+    border: 1px solid grey;
+ }
+
+
+ section.mainWindow .graph .names.vertical{
+    display: flex;
+    flex-direction: column;
+ }
+
+ 
+ section.mainWindow .graph .names.horizontal{
+    display: flex;
+    flex-direction: row;
+ }
