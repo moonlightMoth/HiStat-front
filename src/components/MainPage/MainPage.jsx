@@ -6,7 +6,7 @@ export const MainPage = () => {
     const [needFile, setNeedFile] = useState(true)
     return(
         <>
-         {needFile && <DragNDropFiles/>}
+         {needFile && <DragNDropFiles setFile={setNeedFile}/>}
          {!needFile && <MainWindow/>}
         </>
     )

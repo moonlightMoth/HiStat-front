@@ -108,7 +108,7 @@ export const MainWindow = () => {
 
                     data: store.makeScatter(doble[0], doble[1]),
 
-                    backgroundColor: "rgba(53, 162, 235)",
+                    backgroundColor: "rgba(128, 128, 128)",
 
                     borderColor: "rgb(53, 162, 235)",
 
@@ -120,7 +120,7 @@ export const MainWindow = () => {
                 },
                 {
 
-                    label: "Полиномиальная",
+                    label: "Регрессия",
 
                     data: store.makePolinomial(doble[0], doble[1], polim),
 
@@ -132,6 +132,22 @@ export const MainWindow = () => {
 
                     pointRadius: 3,
                     showLine: true,
+
+                },
+                {
+
+                    label: "Выбросы",
+
+                    data: store.makeAnomal(doble[0], doble[1], polim),
+
+                    backgroundColor: "rgba(0, 162, 235)",
+
+                    borderColor: "rgb(255, 43, 43)",
+
+                    borderWidth: 3,
+
+                    pointRadius: 7,
+                    showLine: false,
 
                 },
 

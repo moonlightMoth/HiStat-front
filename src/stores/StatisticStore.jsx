@@ -1,5 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
+import axios from 'axios';
+
 class StatisticStore {
     initialState = {
         // "corr": [[0.9999999999999997, 0.2321714089685338, -0.09321811071766652], [0.2321714089685338, 1.0000000000000002, 0.21211064810006228], [-0.09321811071766652, 0.21211064810006228, 1.0000000000000004]]
@@ -156,6 +158,16 @@ class StatisticStore {
             "names": ["var1", "var2", "var3"]
         }
     }
+
+    getDataState = async (formData) => {
+
+        const res = axios.post('https://api.moonlightmoth.ru/histat', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }).then(response => this.initialState = response).catch(error => console.log(error))
+    }
+
     constructor() {
         makeAutoObservable(this)
     }
@@ -198,6 +210,20 @@ class StatisticStore {
         // this.initialState.regression[name1][name2]
 
     }
+
+    makeAnomal(namex, namey, pow) {
+        const anomaly = store.initialState.regression[namex]?.[namey]?.[pow]?.anomsy;
+        const data = []
+        if (anomaly) {
+            for (let i = 0; i < anomaly.length; i++) {
+                data.push({ x: store.initialState.sampling[namex][anomaly[i]], y: store.initialState.sampling[namey][anomaly[i]] })
+
+            }
+        }
+
+        return data;
+    }
+
     generateRandomColor() {
         const r = Math.floor(Math.random() * 256);
         const g = Math.floor(Math.random() * 256);
@@ -209,13 +235,13 @@ class StatisticStore {
         if (value < 0) {
             // Генерация мягких оттенков синего для отрицательных значений
             // const blueScale = Math.floor((1 - value) * 5); // 10 оттенков синего
-            const blueScale = -value *10*25
+            const blueScale = -value * 10 * 25
             return `rgba(0, 0, 255,${-value})`; // Более мягкий синий цвет
-          } else {
+        } else {
             // Генерация мягких оттенков красного для положительных значений
-            const redScale = value *10*25; // 10 оттенков красного
+            const redScale = value * 10 * 25; // 10 оттенков красного
             return `rgba(255, 0, 0, ${value})`; // Более мягкий красный цвет
-          }
+        }
     }
 
     getTextColor(bgColor) {
@@ -223,13 +249,14 @@ class StatisticStore {
         const rgba = bgColor.match(/rgba?\((\d+), (\d+), (\d+)(?:, (\d*\.?\d+))?\)/);
         const a = rgba?.[4]
         const r = rgba?.[1]
-        if ( r == "255" && a && a>0.5){
+        if (r == "255" && a && a > 0.5) {
             return "white"
         }
         return "black"
         // const brightness = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]; // Формула для яркости
         // return brightness < 128 ? 'white' : 'black'; // Если фон темный, текст белый, если светлый — черный
-      };
+    };
+
 
 
 }
