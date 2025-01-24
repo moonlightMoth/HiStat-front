@@ -13,5 +13,7 @@ export default defineConfig({
     	}
   },
 
+  define: { _global: ({}), },
+
   base:'./'
 })

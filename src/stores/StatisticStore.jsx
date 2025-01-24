@@ -1,6 +1,8 @@
 import { makeAutoObservable } from 'mobx';
 
 import axios from 'axios';
+//const axios = require('axios/dist/browser/axios.cjs');
+//const axios = require('axios').default;
 
 class StatisticStore {
     initialState = {
