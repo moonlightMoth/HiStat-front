@@ -1,8 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 
 import axios from 'axios';
-//const axios = require('axios/dist/browser/axios.cjs');
-//const axios = require('axios').default;
 
 class StatisticStore {
     initialState = {
@@ -162,8 +160,8 @@ class StatisticStore {
     }
 
     getDataState = async (formData) => {
+        const res = fetch('https://api.moonlightmoth.ru/histat', 
 
-        const res = await fetch('https://api.moonlightmoth.ru/histat', 
             {
                  method: 'POST',
                 //  headers: {
@@ -171,13 +169,10 @@ class StatisticStore {
                 //  },
                 //mode: 'no-cors', 
                  body: formData
-            }).then(response => this.initialState = response).catch(error => console.log(error))
+            }).then(response => this.initialState = response.json()).catch(error => console.log(error))
 
-    //     const res = axios.post('https://api.moonlightmoth.ru/histat', formData, {
-    //         headers: {
-    //           'Content-Type': 'multipart/form-data',
-    //         },
-    //       }).then(response => this.initialState = response).catch(error => console.log(error))
+
+
     }
 
     constructor() {

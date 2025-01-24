@@ -7,6 +7,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> f2e8a7ba06c757ba241fb9ebb91870741c90586d
   define: { _global: ({}), },
 
   base:'./'
