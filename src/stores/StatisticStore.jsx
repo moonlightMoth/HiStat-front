@@ -163,11 +163,21 @@ class StatisticStore {
 
     getDataState = async (formData) => {
 
-        const res = axios.post('https://api.moonlightmoth.ru/histat', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }).then(response => this.initialState = response).catch(error => console.log(error))
+        const res = await fetch('https://api.moonlightmoth.ru/histat', 
+            {
+                 method: 'POST',
+                //  headers: {
+                //     'Content-Type': 'multipart/form-data',
+                //  },
+                //mode: 'no-cors', 
+                 body: formData
+            }).then(response => this.initialState = response).catch(error => console.log(error))
+
+    //     const res = axios.post('https://api.moonlightmoth.ru/histat', formData, {
+    //         headers: {
+    //           'Content-Type': 'multipart/form-data',
+    //         },
+    //       }).then(response => this.initialState = response).catch(error => console.log(error))
     }
 
     constructor() {
