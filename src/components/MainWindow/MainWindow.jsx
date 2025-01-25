@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { store } from "../../stores/StatisticStore"
 import "./MainWindow.css"
 import { Scatter } from "react-chartjs-2"
+import { observer } from "mobx-react";
 
-export const MainWindow = () => {
+export const MainWindow = observer(() => {
     const corr = store.initialState.corr;
     const [tableStDevVar, setTableStDevVar] = useState([])
     const [polim, setPolim] = useState("1")
     useEffect(() => {
         setTableStDevVar(store.makeTableStdevVar());
-    }, [])
+    }, [corr])
 
 
-    const [doble, setDoble] = useState(["var2", "var3"])
+    const [doble, setDoble] = useState([store.initialState.sampling.names[0],store.initialState.sampling.names[1]])
     const [dataScatter, setDataScatter] = useState()
 
 
@@ -156,7 +157,7 @@ export const MainWindow = () => {
         }
         // store.makePolinomial(doble[0], doble[1], "1")
         setDataScatter(data)
-    }, [doble, polim])
+    }, [doble, polim,corr])
 
     const handlePolimChange = (data) => {
         setPolim(data.target.value)
@@ -292,4 +293,4 @@ export const MainWindow = () => {
             </div>
         </section>
     )
-}
+})

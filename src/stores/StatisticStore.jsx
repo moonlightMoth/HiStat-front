@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 
 import axios from 'axios';
 
@@ -159,15 +159,33 @@ class StatisticStore {
         }
     }
 
-    getDataState = async (formData) => {
-        const res = 
-            fetch('https://api.moonlightmoth.ru/histat', {method: 'POST', body: formData})
-            .then(response => this.initialState = response.json())
-            .catch(error => console.log(error));
-    }
+    
 
     constructor() {
         makeAutoObservable(this)
+    }
+
+    getDataState = async (formData) => {
+        console.log("test1")
+        try{
+            console.log("test1")
+            const res = 
+            await (await fetch('https://api.moonlightmoth.ru/histat', {method: 'POST', body: formData})).json()
+            console.log("test2")
+            runInAction(()=>{
+                this.initialState = res;
+                console.log(this.initialState)
+            })
+           
+
+        }
+        catch(e){
+            console.log(e)
+        }
+        // const res = 
+        //     fetch('https://api.moonlightmoth.ru/histat', {method: 'POST', body: formData})
+        //     .then(response => this.initialState = response.json())
+        //     .catch(error => console.log(error));
     }
 
     makeTableStdevVar() {

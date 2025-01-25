@@ -12,12 +12,12 @@ export const DragNDropFiles = ({setFile}) => {
         setFile(false);
     }, [file])
 
-    const handleChange = (file) => {
+    const handleChange = async (file) => {
         console.log(file)
         setFileData(file);
         const formData = new FormData()
         formData.append('file', file)
-        store.getDataState(formData)
+       await  store.getDataState(formData)
     };
     return(
     <FileUploader handleChange={handleChange} name="file" types={fileTypes} />)
