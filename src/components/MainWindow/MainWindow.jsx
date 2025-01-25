@@ -115,7 +115,7 @@ export const MainWindow = observer(() => {
 
                     borderWidth: 1,
 
-                    pointRadius: 5,
+                    pointRadius: 2,
                     // showLine: true,
 
                 },
@@ -125,9 +125,9 @@ export const MainWindow = observer(() => {
 
                     data: store.makePolinomial(doble[0], doble[1], polim),
 
-                    backgroundColor: "rgba(0, 162, 235)",
+                    backgroundColor: "rgba(0, 200, 50, 255)",
 
-                    borderColor: "rgb(0, 162, 235)",
+                    borderColor: "rgb(0, 200, 50)",
 
                     borderWidth: 1,
 

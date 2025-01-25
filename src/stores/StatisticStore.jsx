@@ -214,7 +214,7 @@ class StatisticStore {
         
             const minX = Math.min(...this.initialState.sampling[name1])
             const maxX = Math.max(...this.initialState.sampling[name1])
-            const counts = this.initialState.sampling[name1]?.length * 2;
+            const counts = 100;//this.initialState.sampling[name1]?.length * 2;
             const step = Math.round(((maxX - minX) / (counts - 1)) * 100) / 100;
             const data = []
             const currentRegressions = this.initialState.regression[name1]?.[name2]?.[pow];
