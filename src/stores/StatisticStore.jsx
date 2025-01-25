@@ -160,19 +160,10 @@ class StatisticStore {
     }
 
     getDataState = async (formData) => {
-        const res = fetch('https://api.moonlightmoth.ru/histat', 
-
-            {
-                 method: 'POST',
-                //  headers: {
-                //     'Content-Type': 'multipart/form-data',
-                //  },
-                //mode: 'no-cors', 
-                 body: formData
-            }).then(response => this.initialState = response.json()).catch(error => console.log(error))
-
-
-
+        const res = 
+            fetch('https://api.moonlightmoth.ru/histat', {method: 'POST', body: formData})
+            .then(response => this.initialState = response.json())
+            .catch(error => console.log(error));
     }
 
     constructor() {
