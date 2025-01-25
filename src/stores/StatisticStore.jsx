@@ -199,8 +199,9 @@ class StatisticStore {
 
     makeScatter(name1, name2) {
         const result = []
-        for (let i = 0; i < this.initialState.sampling[name1].length; i++) {
-            result.push({ x: this.initialState.sampling[name1][i], y: this.initialState.sampling[name2][i] })
+        console.log(name1, name2)
+        for (let i = 0; i < this.initialState.sampling[name1]?.length; i++) {
+            result.push({ x: this.initialState.sampling[name1]?.[i], y: this.initialState.sampling[name2]?.[i] })
         }
 
         const sortedData = result.sort((a, b) => a.x - b.x);
@@ -208,22 +209,26 @@ class StatisticStore {
     }
 
     makePolinomial(name1, name2, pow) {
-        const minX = Math.min(...this.initialState.sampling[name1])
-        const maxX = Math.max(...this.initialState.sampling[name1])
-        const counts = this.initialState.sampling[name1].length * 2;
-        const step = Math.round(((maxX - minX) / (counts - 1)) * 100) / 100;
-        const data = []
-        const currentRegressions = this.initialState.regression[name1]?.[name2]?.[pow];
-        if (currentRegressions)
-            for (let i = minX; i <= maxX; i += step) {  // Используем i <= maxX
-                const pointY = currentRegressions.coefs[0] + i * currentRegressions.coefs[1] +
-                    i * i * currentRegressions.coefs[2] + i * i * i * currentRegressions.coefs[3] +
-                    i * i * i * i * currentRegressions.coefs[4];
-                data.push({ x: i, y: pointY });
-            }
+        if (this.initialState.sampling[name1] && this.initialState.sampling[name2]){
 
-        return data;
-        // this.initialState.regression[name1][name2]
+        
+            const minX = Math.min(...this.initialState.sampling[name1])
+            const maxX = Math.max(...this.initialState.sampling[name1])
+            const counts = this.initialState.sampling[name1]?.length * 2;
+            const step = Math.round(((maxX - minX) / (counts - 1)) * 100) / 100;
+            const data = []
+            const currentRegressions = this.initialState.regression[name1]?.[name2]?.[pow];
+            if (currentRegressions)
+                for (let i = minX; i <= maxX; i += step) {  // Используем i <= maxX
+                    const pointY = currentRegressions.coefs[0] + i * currentRegressions.coefs[1] +
+                        i * i * currentRegressions.coefs[2] + i * i * i * currentRegressions.coefs[3] +
+                        i * i * i * i * currentRegressions.coefs[4];
+                    data.push({ x: i, y: pointY });
+                }
+
+            return data;
+            // this.initialState.regression[name1][name2]
+        }
 
     }
 
