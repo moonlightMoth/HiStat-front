@@ -166,7 +166,7 @@ export const MainWindow = observer(() => {
     return (
         <section className="mainWindow">
             <div className="graph">
-                <table style={{ width: "100%", height: "90%" }}>
+                <table>
                     <tbody>
                         <tr>
                             <td>
@@ -183,7 +183,7 @@ export const MainWindow = observer(() => {
                             <td>
                                 {dataScatter && <Scatter data={dataScatter} options={options}></Scatter>}
                             </td>
-                            <td rowSpan={2}>
+                            <td rowSpan={2} className="vericalLabels">
                                 <div>
                                     < input type="radio" id={"polim1"} name="Polim1" value={"1"} checked={polim == "1"} onChange={handlePolimChange}/>
                                     <label htmlFor="Polim1">1-я степень</label>
@@ -200,6 +200,18 @@ export const MainWindow = observer(() => {
                                 <div>
                                     < input type="radio" id={"polim4"} name="Polim1" value={"4"} checked={polim == "4"} onChange={handlePolimChange}/>
                                     <label htmlFor="Polim4">4-я степень</label>
+                                </div>
+                                <div>
+                                    < input type="radio" id={"log"} name="Polim1" value={"log"} checked={polim == "log"} onChange={handlePolimChange}/>
+                                    <label htmlFor="Polim4">Логарифмическая</label>
+                                </div>
+                                <div>
+                                    < input type="radio" id={"pow"} name="Polim1" value={"pow"} checked={polim == "pow"} onChange={handlePolimChange}/>
+                                    <label htmlFor="Polim4">Показательная</label>
+                                </div>
+                                <div>
+                                    < input type="radio" id={"exp"} name="Polim1" value={"exp"} checked={polim == "exp"} onChange={handlePolimChange}/>
+                                    <label htmlFor="Polim4">Экспоненциальная</label>
                                 </div>
 
                             </td>
@@ -262,7 +274,7 @@ export const MainWindow = observer(() => {
                                     <th></th>
                                     {store.initialState.sampling.names.map((el, ind) => {
                                         return (
-                                            <th key={ind}>
+                                            <th key={ind} style={{writingMode: "vertical-rl", transform: "rotate(180deg)"}}>
                                                 {el}
                                             </th>
                                         )

@@ -28,6 +28,21 @@ class StatisticStore {
                         "coefs": [0.7532487341377418, 3.7122739701881073, -1.2316548931630678, 0.15712729177175788, -0.006635060747669286],
                         "anomsx": [],
                         "anomsy": []
+                    },
+                    "log": { // полулогарифмическая регрессия y = b_0 + b_1 * lg(x)
+                        "coefs": [2, 5],
+                        "anomsx": [],
+                        "anomsy": [ ]
+                    },
+                    "pow": { // показательная регрессия y = b_0 * b_1 ^ x
+                        "coefs": [5, 6],
+                        "anomsx": [],
+                        "anomsy": []
+                    },
+                    "exp": { // экспоненциальная регрессия y = b_0 * e ^ (b_1*x)
+                        "coefs": [2, 5],
+                        "anomsx": [],
+                        "anomsy": []
                     }
                 },
                 "var3": {
@@ -159,7 +174,7 @@ class StatisticStore {
         }
     }
 
-    
+
 
     constructor() {
         makeAutoObservable(this)
@@ -167,19 +182,19 @@ class StatisticStore {
 
     getDataState = async (formData) => {
         console.log("test1")
-        try{
+        try {
             console.log("test1")
-            const res = 
-            await (await fetch('https://api.moonlightmoth.ru/histat', {method: 'POST', body: formData})).json()
+            const res =
+                await (await fetch('https://api.moonlightmoth.ru/histat', { method: 'POST', body: formData })).json()
             console.log("test2")
-            runInAction(()=>{
+            runInAction(() => {
                 this.initialState = res;
                 console.log(this.initialState)
             })
-           
+
 
         }
-        catch(e){
+        catch (e) {
             console.log(e)
         }
         // const res = 
@@ -209,9 +224,9 @@ class StatisticStore {
     }
 
     makePolinomial(name1, name2, pow) {
-        if (this.initialState.sampling[name1] && this.initialState.sampling[name2]){
+        if (this.initialState.sampling[name1] && this.initialState.sampling[name2]) {
 
-        
+
             const minX = Math.min(...this.initialState.sampling[name1])
             const maxX = Math.max(...this.initialState.sampling[name1])
             const counts = 100;//this.initialState.sampling[name1]?.length * 2;
@@ -220,9 +235,23 @@ class StatisticStore {
             const currentRegressions = this.initialState.regression[name1]?.[name2]?.[pow];
             if (currentRegressions)
                 for (let i = minX; i <= maxX; i += step) {  // Используем i <= maxX
-                    const pointY = currentRegressions.coefs[0] + i * currentRegressions.coefs[1] +
-                        i * i * currentRegressions.coefs[2] + i * i * i * currentRegressions.coefs[3] +
-                        i * i * i * i * currentRegressions.coefs[4];
+                    let pointY; 
+                    switch(pow){
+                        case "log":
+                            pointY = currentRegressions.coefs[0]+currentRegressions.coefs[1]*Math.log10(i);
+                            break;
+                        case "exp":
+                            pointY = currentRegressions.coefs[0]*Math.pow(Math.E, currentRegressions.coefs[1]*i)
+                            break;
+                        case "pow":
+                            pointY = currentRegressions.coefs[0]*Math.pow(currentRegressions.coefs[1], i);
+                            break;
+                        default:
+                            pointY = currentRegressions.coefs[0] + i * currentRegressions.coefs[1] +
+                            i * i * currentRegressions.coefs[2] + i * i * i * currentRegressions.coefs[3] +
+                            i * i * i * i * currentRegressions.coefs[4];
+
+                    }
                     data.push({ x: i, y: pointY });
                 }
 
