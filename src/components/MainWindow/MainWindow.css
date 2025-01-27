@@ -24,7 +24,20 @@ section.mainWindow .graph > table{
 
 .vericalLabels > div{
     text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 
+}
+
+.vericalLabels > div > label{
+    border-radius: 5px;
+    border: 1px solid #d9d9d9;
+}
+
+:where(.css-dev-only-do-not-override-1htoz2s).ant-radio-button-wrapper:not(:first-child)::before{
+    background-color: white;
+    display: none;
 }
 
 section.mainWindow .tables{
@@ -60,6 +73,16 @@ section.mainWindow .tables th {
  section.mainWindow .graph .names.vertical{
     display: flex;
     flex-direction: column;
+ }
+ section.mainWindow .graph .names.vertical > div{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+ }
+
+ section.mainWindow .graph .names.vertical > div > label{
+    border-radius: 5px;
+    border: 1px solid #d9d9d9
  }
 
  

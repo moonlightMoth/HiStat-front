@@ -1,7 +1,5 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 
-import axios from 'axios';
-
 class StatisticStore {
     initialState = {
         // "corr": [[0.9999999999999997, 0.2321714089685338, -0.09321811071766652], [0.2321714089685338, 1.0000000000000002, 0.21211064810006228], [-0.09321811071766652, 0.21211064810006228, 1.0000000000000004]]
@@ -173,6 +171,8 @@ class StatisticStore {
             "names": ["var1", "var2", "var3"]
         }
     }
+    loading = false
+    file = undefined
 
 
 
@@ -180,22 +180,31 @@ class StatisticStore {
         makeAutoObservable(this)
     }
 
+    setFile(file){
+        runInAction(()=>{
+            this.file = file;
+        })
+        
+    }
+
     getDataState = async (formData) => {
-        console.log("test1")
         try {
-            console.log("test1")
-            const res =
-                await (await fetch('https://api.moonlightmoth.ru/histat', { method: 'POST', body: formData })).json()
-            console.log("test2")
+            // Устанавливаем loading в true перед отправкой запроса
+            this.loading = true;
+    
+            // Выполняем запрос
+            const res = await (await fetch('https://api.moonlightmoth.ru/histat', { method: 'POST', body: formData })).json();
+            
+            // После получения ответа устанавливаем loading в false
             runInAction(() => {
                 this.initialState = res;
-                console.log(this.initialState)
-            })
-
-
-        }
-        catch (e) {
-            console.log(e)
+                this.loading = false; // Устанавливаем loading в false после получения ответа
+                console.log(this.initialState);
+            });
+        } catch (e) {
+            // В случае ошибки также устанавливаем loading в false
+            this.loading = false;
+            console.log(e);
         }
         // const res = 
         //     fetch('https://api.moonlightmoth.ru/histat', {method: 'POST', body: formData})
@@ -224,6 +233,8 @@ class StatisticStore {
     }
 
     makePolinomial(name1, name2, pow) {
+        console.log("POW")
+        console.log(pow)
         if (this.initialState.sampling[name1] && this.initialState.sampling[name2]) {
 
 
@@ -233,14 +244,16 @@ class StatisticStore {
             const step = Math.round(((maxX - minX) / (counts - 1)) * 100) / 100;
             const data = []
             const currentRegressions = this.initialState.regression[name1]?.[name2]?.[pow];
+            console.log(currentRegressions)
             if (currentRegressions)
                 for (let i = minX; i <= maxX; i += step) {  // Используем i <= maxX
                     let pointY; 
                     switch(pow){
                         case "log":
-                            pointY = currentRegressions.coefs[0]+currentRegressions.coefs[1]*Math.log10(i);
+                            pointY = currentRegressions.coefs[0]+currentRegressions.coefs[1]*Math.log(i);
                             break;
                         case "exp":
+
                             pointY = currentRegressions.coefs[0]*Math.pow(Math.E, currentRegressions.coefs[1]*i)
                             break;
                         case "pow":
@@ -250,6 +263,8 @@ class StatisticStore {
                             pointY = currentRegressions.coefs[0] + i * currentRegressions.coefs[1] +
                             i * i * currentRegressions.coefs[2] + i * i * i * currentRegressions.coefs[3] +
                             i * i * i * i * currentRegressions.coefs[4];
+                            console.log("default")
+                            break;
 
                     }
                     data.push({ x: i, y: pointY });

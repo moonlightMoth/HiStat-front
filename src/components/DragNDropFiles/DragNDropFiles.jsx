@@ -5,16 +5,16 @@ import { useEffect, useState } from "react";
 export const DragNDropFiles = ({setFile}) => {
     const fileTypes = ["csv"]
 
-    const [file, setFileData] = useState(undefined);
+    const [file, setFileData] = useState(store.file);
 
     useEffect(()=>{
         if (file)
-        setFile(false);
+
+        setFile(file);
     }, [file])
 
     const handleChange = async (file) => {
-        console.log(file)
-        setFileData(file);
+        setFile(file);
         const formData = new FormData()
         formData.append('file', file)
        await  store.getDataState(formData)

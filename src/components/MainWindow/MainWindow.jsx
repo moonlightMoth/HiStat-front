@@ -3,6 +3,19 @@ import { store } from "../../stores/StatisticStore"
 import "./MainWindow.css"
 import { Scatter } from "react-chartjs-2"
 import { observer } from "mobx-react";
+import { Radio } from 'antd';
+
+
+const optionsWithDisabled = [
+    { label: 'Линейная', value: '1' },
+    { label: '2-ая степень', value: '2' },
+    { label: '3-ая степень', value: '3' },
+    { label: '4-ая степень', value: '4' },
+    { label: 'Экспоненицальная', value: 'exp' },
+    { label: 'Логарифмическая', value: 'log' },
+    { label: 'Показательная', value: 'pow' },
+
+]
 
 export const MainWindow = observer(() => {
     const corr = store.initialState.corr;
@@ -13,9 +26,13 @@ export const MainWindow = observer(() => {
     }, [corr])
 
 
-    const [doble, setDoble] = useState([store.initialState.sampling.names[0],store.initialState.sampling.names[1]])
+    const [doble, setDoble] = useState([store.initialState.sampling.names[0], store.initialState.sampling.names[1]])
     const [dataScatter, setDataScatter] = useState()
 
+    const namesVariables = store.initialState.sampling.names.map(item => ({
+        label: item,
+        value: item
+    }))
 
 
 
@@ -157,7 +174,7 @@ export const MainWindow = observer(() => {
         }
         // store.makePolinomial(doble[0], doble[1], "1")
         setDataScatter(data)
-    }, [doble, polim,corr])
+    }, [doble, polim, corr])
 
     const handlePolimChange = (data) => {
         setPolim(data.target.value)
@@ -171,20 +188,27 @@ export const MainWindow = observer(() => {
                         <tr>
                             <td>
                                 <section className="names vertical">
-                                    {store.initialState.sampling.names.map((el, ind) => {
+                                    {/* {store.initialState.sampling.names.map((el, ind) => {
                                         return (
                                             <div key={`vertical ${el}`}>
                                                 < input type="radio" id={el} name="valueVertical" value={el} onChange={handleChageInputVertical} checked={el == doble[1]} />
                                                 <label htmlFor="valueVertical">{el}</label>
                                             </div>)
-                                    })}
+                                    })} */}
+                                    <Radio.Group
+                                        options={namesVariables}
+                                        onChange={handleChageInputVertical}
+                                        value={doble[1]}
+                                        optionType="button"
+                                        buttonStyle="solid"
+                                    />
                                 </section>
                             </td>
                             <td>
                                 {dataScatter && <Scatter data={dataScatter} options={options}></Scatter>}
                             </td>
                             <td rowSpan={2} className="vericalLabels">
-                                <div>
+                                {/* <div>
                                     < input type="radio" id={"polim1"} name="Polim1" value={"1"} checked={polim == "1"} onChange={handlePolimChange}/>
                                     <label htmlFor="Polim1">1-я степень</label>
                                 </div>
@@ -212,20 +236,36 @@ export const MainWindow = observer(() => {
                                 <div>
                                     < input type="radio" id={"exp"} name="Polim1" value={"exp"} checked={polim == "exp"} onChange={handlePolimChange}/>
                                     <label htmlFor="Polim4">Экспоненциальная</label>
-                                </div>
+                                </div> */}
+                                <Radio.Group
+                                    options={optionsWithDisabled}
+                                    onChange={handlePolimChange}
+                                    value={polim}
+                                    optionType="button"
+                                    buttonStyle="solid"
+                                />
+
 
                             </td>
                         </tr>
                         <tr>
                             <td></td>
                             <td colSpan={2}> <section className="names horizontal">
-                                {store.initialState.sampling.names.map((el, ind) => {
+                                {/* {store.initialState.sampling.names.map((el, ind) => {
                                     return (
                                         <div key={`horizontal ${el}`}>
                                             < input type="radio" id={el} name="valueHorizontal" value={el} onChange={handleChageInputHorizontal} checked={el == doble[0]} />
                                             <label htmlFor="valueHorizontal">{el}</label>
                                         </div>)
-                                })}
+                                })} */}
+                                <Radio.Group
+                                    options={namesVariables}
+                                    // onChange={onChange4}
+                                    onChange={handleChageInputHorizontal}
+                                    value={doble[0]}
+                                    optionType="button"
+                                    buttonStyle="solid"
+                                />
                             </section>
 
                             </td>
@@ -274,7 +314,7 @@ export const MainWindow = observer(() => {
                                     <th></th>
                                     {store.initialState.sampling.names.map((el, ind) => {
                                         return (
-                                            <th key={ind} style={{writingMode: "vertical-rl", transform: "rotate(180deg)"}}>
+                                            <th key={ind} style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
                                                 {el}
                                             </th>
                                         )
