@@ -332,7 +332,7 @@ export const MainWindow = observer(() => {
             </div>
             <div className="tables">
                 <section className="container">
-                    <h3> Среднеквадратическое отклонения и дисперсии</h3>
+                    <h3> Среднеквадратические отклонения и дисперсии</h3>
                     <div>
                         <table>
                             <thead>
