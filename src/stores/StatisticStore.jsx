@@ -173,6 +173,7 @@ class StatisticStore {
     }
     loading = false
     file = undefined
+    textFormula = ""
 
 
 
@@ -233,10 +234,8 @@ class StatisticStore {
     }
 
     makePolinomial(name1, name2, pow) {
-        console.log("POW")
-        console.log(pow)
         if (this.initialState.sampling[name1] && this.initialState.sampling[name2]) {
-
+            const currentRegressions = this.initialState.regression[name1]?.[name2]?.[pow];
 
             const minX = Math.min(...this.initialState.sampling[name1])
             const maxX = Math.max(...this.initialState.sampling[name1])
@@ -244,11 +243,7 @@ class StatisticStore {
             const stepcheck = Math.round(((maxX - minX) / (counts - 1)) * 100) / 100
             const step = stepcheck == 0 ? (maxX - minX) / (counts) : stepcheck;
             const data = []
-            const currentRegressions = this.initialState.regression[name1]?.[name2]?.[pow];
-            console.log(currentRegressions)
-            console.log(`step = ${step}`);
-            console.log(`minX = ${minX}`);
-            console.log(`maxX = ${maxX}`);
+            
             if (currentRegressions)
                 for (let i = minX; i <= maxX; i += step) {  // Используем i <= maxX
                     let pointY; 
@@ -261,7 +256,7 @@ class StatisticStore {
                             pointY = currentRegressions.coefs[0]*Math.pow(Math.E, currentRegressions.coefs[1]*i)
                             break;
                         case "pow":
-                            pointY = currentRegressions.coefs[0]*Math.pow(currentRegressions.coefs[1], i);
+                            pointY = currentRegressions.coefs[0]*Math.pow(i, currentRegressions.coefs[1]);
                             break;
                         default:
                             pointY = currentRegressions.coefs[0] + i * currentRegressions.coefs[1] +
@@ -277,6 +272,14 @@ class StatisticStore {
             return data;
             // this.initialState.regression[name1][name2]
         }
+
+    }
+
+    setFormula(text){
+        runInAction(()=>{
+            this.textFormula = text;
+
+        })
 
     }
 
@@ -325,6 +328,7 @@ class StatisticStore {
         // const brightness = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]; // Формула для яркости
         // return brightness < 128 ? 'white' : 'black'; // Если фон темный, текст белый, если светлый — черный
     };
+
 
 
 

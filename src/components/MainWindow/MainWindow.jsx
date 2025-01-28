@@ -21,9 +21,11 @@ export const MainWindow = observer(() => {
     const corr = store.initialState.corr;
     const [tableStDevVar, setTableStDevVar] = useState([])
     const [polim, setPolim] = useState("1")
+    const [text, setText] = useState()
     useEffect(() => {
         setTableStDevVar(store.makeTableStdevVar());
     }, [corr])
+
 
 
     const [doble, setDoble] = useState([store.initialState.sampling.names[0], store.initialState.sampling.names[1]])
@@ -88,7 +90,8 @@ export const MainWindow = observer(() => {
 
             //     display: true,
 
-            //     text: "Регрессия",
+            //     text: store.textFormula,
+            //     html: true,
 
             // },
 
@@ -174,15 +177,65 @@ export const MainWindow = observer(() => {
         }
         // store.makePolinomial(doble[0], doble[1], "1")
         setDataScatter(data)
+        setText(formula())
     }, [doble, polim, corr])
 
     const handlePolimChange = (data) => {
         setPolim(data.target.value)
     }
 
+    const formula = () => {
+        const currentRegressions = store.initialState.regression[doble[0]]?.[doble[1]]?.[polim]
+        console.log(polim)
+        if (currentRegressions)
+            switch (polim) {
+                case "log":
+                    return <>
+                        y = {currentRegressions.coefs[0]}+ {currentRegressions.coefs[1]}* ln(x)
+                    </>
+                    break;
+                case "exp":
+
+                    return <>
+                        y = {currentRegressions.coefs[0]}*e<sup>{currentRegressions.coefs[1]}*x</sup>
+                    </>
+
+
+                case "pow":
+                    console.log("hi")
+                    return <>
+                        y = {currentRegressions.coefs[0]}*x<sup>{currentRegressions.coefs[1]}</sup>
+                    </>
+                case "1":
+                    return <>
+                        y = {currentRegressions.coefs[0]} {currentRegressions.coefs[1] > 0 ? "+" : ""} {currentRegressions.coefs[1]}*x
+                    </>
+                case "2":
+                    return <>
+                        y = {currentRegressions.coefs[0]} {currentRegressions.coefs[1] > 0 ? "+" : ""} {currentRegressions.coefs[1]}*x {currentRegressions.coefs[2] > 0 ? "+" : ""}
+                        {currentRegressions.coefs[2]}*x<sup>2</sup>
+                    </>
+                case "3":
+                    return <>
+                        y = {currentRegressions.coefs[0]} {currentRegressions.coefs[1] > 0 ? "+" : ""} {currentRegressions.coefs[1]}*x {currentRegressions.coefs[2] > 0 ? "+" : ""}
+                        {currentRegressions.coefs[2]}*x<sup>2</sup>{currentRegressions.coefs[3] > 0 ? "+" : ""}{currentRegressions.coefs[3]}*x<sup>3</sup>
+                    </>
+
+                default:
+                    return <>
+                        y = {currentRegressions.coefs[0]} {currentRegressions.coefs[1] > 0 ? "+" : ""} {currentRegressions.coefs[1]}*x {currentRegressions.coefs[2] > 0 ? "+" : ""}
+                         {currentRegressions.coefs[2]}*x<sup>2</sup>{currentRegressions.coefs[3] > 0 ? "+" : ""}{currentRegressions.coefs[3]}*x<sup>3</sup>{currentRegressions.coefs[4] > 0 ? "+" : ""}
+                        {currentRegressions.coefs[4]}*x<sup>4</sup>
+                    </>
+
+            }
+    }
+
     return (
         <section className="mainWindow">
+            <h5>{text}</h5>
             <div className="graph">
+                
                 <table>
                     <tbody>
                         <tr>

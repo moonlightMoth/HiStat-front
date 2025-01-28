@@ -10,9 +10,12 @@ section.mainWindow {
 section.mainWindow .graph{
 
     /* background-color: rgb(216, 73, 255); */
-    width: 95%;
-    height: 100vh;
+    width: 80%;
+    height: 80vh;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     
 }
 
