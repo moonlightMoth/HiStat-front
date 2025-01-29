@@ -25,6 +25,21 @@ section.mainWindow .graph > table{
     height: 100%
 }
 
+.vericalLabels {
+    display: flex;
+    flex-direction: row;
+    gap:5px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.vericalLabels .det > label {
+    font-size: 14px;
+    line-height: 30px;
+    padding: 0 15px
+}
+
 .vericalLabels > div{
     text-align: left;
     display: flex;
@@ -33,10 +48,10 @@ section.mainWindow .graph > table{
 
 }
 
-.vericalLabels > div > label{
+/* .vericalLabels > div > label{
     border-radius: 5px;
     border: 1px solid #d9d9d9;
-}
+} */
 
 :where(.css-dev-only-do-not-override-1htoz2s).ant-radio-button-wrapper:not(:first-child)::before{
     background-color: white;

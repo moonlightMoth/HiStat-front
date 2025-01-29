@@ -5,8 +5,10 @@ import { Scatter } from "react-chartjs-2"
 import { observer } from "mobx-react";
 import { Radio } from 'antd';
 
+import { CustomButton } from "../CustomButton/CustomButton";
 
-const optionsWithDisabled = [
+
+const optionsButton = [
     { label: 'Линейная', value: '1' },
     { label: '2-ая степень', value: '2' },
     { label: '3-ая степень', value: '3' },
@@ -99,6 +101,16 @@ export const MainWindow = observer(() => {
 
     }
 
+    const getBackgroundColor = (value) => {
+         // Для значений <= 0 фон будет белым
+    if (value <= 0) {
+        return 'rgba(255, 255, 255, 1)'; // Белый
+    }
+
+    const clampedValue = Math.min(value, 1);
+    return `rgba(0, 200, 50, ${clampedValue})`;
+    };
+
     const handleChageInputHorizontal = (data) => {
         setDoble((prev) => [data.target.value, prev[1]])
         console.log(data.target.value)
@@ -155,22 +167,22 @@ export const MainWindow = observer(() => {
                     showLine: true,
 
                 },
-                {
+                // {
 
-                    label: "Выбросы",
+                //     label: "Выбросы",
 
-                    data: store.makeAnomal(doble[0], doble[1], polim),
+                //     data: store.makeAnomal(doble[0], doble[1], polim),
 
-                    backgroundColor: "rgba(0, 162, 235)",
+                //     backgroundColor: "rgba(0, 162, 235)",
 
-                    borderColor: "rgb(255, 43, 43)",
+                //     borderColor: "rgb(255, 43, 43)",
 
-                    borderWidth: 3,
+                //     borderWidth: 3,
 
-                    pointRadius: 7,
-                    showLine: false,
+                //     pointRadius: 7,
+                //     showLine: false,
 
-                },
+                // },
 
             ],
 
@@ -181,6 +193,8 @@ export const MainWindow = observer(() => {
     }, [doble, polim, corr])
 
     const handlePolimChange = (data) => {
+
+        console.log(data)
         setPolim(data.target.value)
     }
 
@@ -224,7 +238,7 @@ export const MainWindow = observer(() => {
                 default:
                     return <>
                         y = {currentRegressions.coefs[0]} {currentRegressions.coefs[1] > 0 ? "+" : ""} {currentRegressions.coefs[1]}*x {currentRegressions.coefs[2] > 0 ? "+" : ""}
-                         {currentRegressions.coefs[2]}*x<sup>2</sup>{currentRegressions.coefs[3] > 0 ? "+" : ""}{currentRegressions.coefs[3]}*x<sup>3</sup>{currentRegressions.coefs[4] > 0 ? "+" : ""}
+                        {currentRegressions.coefs[2]}*x<sup>2</sup>{currentRegressions.coefs[3] > 0 ? "+" : ""}{currentRegressions.coefs[3]}*x<sup>3</sup>{currentRegressions.coefs[4] > 0 ? "+" : ""}
                         {currentRegressions.coefs[4]}*x<sup>4</sup>
                     </>
 
@@ -235,7 +249,7 @@ export const MainWindow = observer(() => {
         <section className="mainWindow">
             <h5>{text}</h5>
             <div className="graph">
-                
+
                 <table>
                     <tbody>
                         <tr>
@@ -255,48 +269,67 @@ export const MainWindow = observer(() => {
                                         optionType="button"
                                         buttonStyle="solid"
                                     />
+
                                 </section>
                             </td>
                             <td>
                                 {dataScatter && <Scatter data={dataScatter} options={options}></Scatter>}
                             </td>
                             <td rowSpan={2} className="vericalLabels">
-                                {/* <div>
-                                    < input type="radio" id={"polim1"} name="Polim1" value={"1"} checked={polim == "1"} onChange={handlePolimChange}/>
-                                    <label htmlFor="Polim1">1-я степень</label>
+                                <div>
+                                {/* <CustomButton label={"Модель"} checked={false} button={false} /> */}
+                                <label style={{width: "100%", textAlign: "center"}}>Модель</label>
+                                    {optionsButton.map(item => {
+                                        return (
+                                            <CustomButton label={item.label} value={item.value} checked={item.value == polim} handleClick={handlePolimChange}/>
+                                        )
+                                    })}
                                 </div>
                                 <div>
-                                    < input type="radio" id={"polim2"} name="Polim1" value={"2"} checked={polim == "2"} onChange={handlePolimChange}/>
-                                    <label htmlFor="Polim2">2-я степень</label>
-                                </div>
-                                <div>
-                                    < input type="radio" id={"polim3"} name="Polim1" value={"3"} checked={polim == "3"} onChange={handlePolimChange}/>
-                                    <label htmlFor="Polim3">3-я степень</label>
+                                <label style={{width: "100%", textAlign: "center"}}>R<sup>2</sup></label>
+
+                                {optionsButton.map(item => {
+                                        return (
+                                            <CustomButton label={store.initialState.regression?.[doble[0]]?.[doble[1]]?.[item.value]?.det?.toFixed(2)} value={item.value} checked={false} button={false} style={{backgroundColor: getBackgroundColor(store.initialState.regression?.[doble[0]]?.[doble[1]]?.[item.value]?.det?.toFixed(2)), color: store.initialState.regression?.[doble[0]]?.[doble[1]]?.[item.value]?.det < 0.5 ? "black" : "white"}}/>
+                                        )
+                                    })}
 
                                 </div>
-                                <div>
-                                    < input type="radio" id={"polim4"} name="Polim1" value={"4"} checked={polim == "4"} onChange={handlePolimChange}/>
-                                    <label htmlFor="Polim4">4-я степень</label>
-                                </div>
-                                <div>
-                                    < input type="radio" id={"log"} name="Polim1" value={"log"} checked={polim == "log"} onChange={handlePolimChange}/>
-                                    <label htmlFor="Polim4">Логарифмическая</label>
-                                </div>
-                                <div>
-                                    < input type="radio" id={"pow"} name="Polim1" value={"pow"} checked={polim == "pow"} onChange={handlePolimChange}/>
-                                    <label htmlFor="Polim4">Показательная</label>
-                                </div>
-                                <div>
-                                    < input type="radio" id={"exp"} name="Polim1" value={"exp"} checked={polim == "exp"} onChange={handlePolimChange}/>
-                                    <label htmlFor="Polim4">Экспоненциальная</label>
-                                </div> */}
-                                <Radio.Group
-                                    options={optionsWithDisabled}
+
+
+
+                                {/* <label>Модель</label> */}
+                                {/* <Radio.Group
+                                    options={optionsButton}
                                     onChange={handlePolimChange}
                                     value={polim}
                                     optionType="button"
                                     buttonStyle="solid"
-                                />
+                                /> */}
+                                {/* <div className="det">
+                                    <label>
+                                        {store.initialState.regression?.[doble[0]]?.[doble[1]]?.["1"]?.det?.toFixed(2)}
+                                    </label>
+                                    <label>
+                                        {store.initialState.regression?.[doble[0]]?.[doble[1]]?.["2"]?.det?.toFixed(2)}
+                                    </label>
+                                    <label>
+                                        {store.initialState.regression?.[doble[0]]?.[doble[1]]?.["3"]?.det?.toFixed(2)}
+                                    </label>
+                                    <label>
+                                        {store.initialState.regression?.[doble[0]]?.[doble[1]]?.["4"]?.det?.toFixed(2)}
+                                    </label>
+                                    <label>
+                                        {store.initialState.regression?.[doble[0]]?.[doble[1]]?.["exp"]?.det?.toFixed(2)}
+                                    </label>
+                                    <label>
+                                        {store.initialState.regression?.[doble[0]]?.[doble[1]]?.["log"]?.det?.toFixed(2)}
+                                    </label>
+                                    <label>
+                                        {store.initialState.regression?.[doble[0]]?.[doble[1]]?.["pow"]?.det?.toFixed(2)}
+                                    </label>
+                                </div> */}
+
 
 
                             </td>
