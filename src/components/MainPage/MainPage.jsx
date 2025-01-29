@@ -5,17 +5,19 @@ import { Spin } from 'antd';
 import { store } from "../../stores/StatisticStore";
 import { observer } from "mobx-react";
 
+import { message } from 'antd';
+
 export const MainPage = observer(() => {
-    useEffect(()=>{
-        console.log("store.loading")
-        console.log(store.loading)
-        console.log(store.file)
-        console.log(`store.file == undefined && !store.loading = ${store.file == undefined && !store.loading}`)
-    }, [store.loading, store.file])
+    const [messageApi, contextHolder] = message.useMessage();
+
+    useEffect(() => {
+        store.setMessageApi(messageApi);
+    }, [])
     return (
         <>
-            {store.file == undefined && !store.loading && <DragNDropFiles setFile={(file) => store.setFile(file)} />}
-            {store.file !== undefined && !store.loading && <MainWindow />}
+            {contextHolder}
+            {store.file == undefined && !store.loading && <DragNDropFiles setFile={(file) => store.setFile(file)} messageApi={messageApi} />}
+            {store.file !== undefined && !store.loading && <MainWindow messageApi={messageApi} />}
             {store.loading && <Spin size="large">
             </Spin>}
         </>

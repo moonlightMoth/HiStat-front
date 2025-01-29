@@ -30,7 +30,7 @@ class StatisticStore {
                     "log": { // полулогарифмическая регрессия y = b_0 + b_1 * lg(x)
                         "coefs": [2, 5],
                         "anomsx": [],
-                        "anomsy": [ ]
+                        "anomsy": []
                     },
                     "pow": { // показательная регрессия y = b_0 * b_1 ^ x
                         "coefs": [5, 6],
@@ -181,21 +181,21 @@ class StatisticStore {
         makeAutoObservable(this)
     }
 
-    setFile(file){
-        runInAction(()=>{
+    setFile(file) {
+        runInAction(() => {
             this.file = file;
         })
-        
+
     }
 
     getDataState = async (formData) => {
         try {
             // Устанавливаем loading в true перед отправкой запроса
             this.loading = true;
-    
+
             // Выполняем запрос
             const res = await (await fetch('https://api.moonlightmoth.ru/histat', { method: 'POST', body: formData })).json();
-            
+
             // После получения ответа устанавливаем loading в false
             runInAction(() => {
                 this.initialState = res;
@@ -204,7 +204,12 @@ class StatisticStore {
             });
         } catch (e) {
             // В случае ошибки также устанавливаем loading в false
+            this.messageApi.open({
+                type: 'error',
+                content: 'Некорректная выборка',
+            });
             this.loading = false;
+            this.file = undefined;
             console.log(e);
         }
         // const res = 
@@ -243,25 +248,25 @@ class StatisticStore {
             const stepcheck = Math.round(((maxX - minX) / (counts - 1)) * 100) / 100
             const step = stepcheck == 0 ? (maxX - minX) / (counts) : stepcheck;
             const data = []
-            
+
             if (currentRegressions)
                 for (let i = minX; i <= maxX; i += step) {  // Используем i <= maxX
-                    let pointY; 
-                    switch(pow){
+                    let pointY;
+                    switch (pow) {
                         case "log":
-                            pointY = currentRegressions.coefs[0]+currentRegressions.coefs[1]*Math.log(i);
+                            pointY = currentRegressions.coefs[0] + currentRegressions.coefs[1] * Math.log(i);
                             break;
                         case "exp":
 
-                            pointY = currentRegressions.coefs[0]*Math.pow(Math.E, currentRegressions.coefs[1]*i)
+                            pointY = currentRegressions.coefs[0] * Math.pow(Math.E, currentRegressions.coefs[1] * i)
                             break;
                         case "pow":
-                            pointY = currentRegressions.coefs[0]*Math.pow(i, currentRegressions.coefs[1]);
+                            pointY = currentRegressions.coefs[0] * Math.pow(i, currentRegressions.coefs[1]);
                             break;
                         default:
                             pointY = currentRegressions.coefs[0] + i * currentRegressions.coefs[1] +
-                            i * i * currentRegressions.coefs[2] + i * i * i * currentRegressions.coefs[3] +
-                            i * i * i * i * currentRegressions.coefs[4];
+                                i * i * currentRegressions.coefs[2] + i * i * i * currentRegressions.coefs[3] +
+                                i * i * i * i * currentRegressions.coefs[4];
                             console.log("default")
                             break;
 
@@ -275,8 +280,8 @@ class StatisticStore {
 
     }
 
-    setFormula(text){
-        runInAction(()=>{
+    setFormula(text) {
+        runInAction(() => {
             this.textFormula = text;
 
         })
@@ -328,6 +333,9 @@ class StatisticStore {
         // const brightness = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]; // Формула для яркости
         // return brightness < 128 ? 'white' : 'black'; // Если фон темный, текст белый, если светлый — черный
     };
+    setMessageApi(data) {
+        this.messageApi = data;
+    }
 
 
 
